@@ -1,0 +1,46 @@
+
+import pandas as pd
+import numpy as np
+data = pd.read_csv(r"2.csv")
+
+concepts = np.array(data.iloc[:,0 :-1])
+target = np.array(data.iloc[:, -1])
+
+def learn(concepts, target):
+    specific_h = concepts[0].copy()
+    print("Initial Specific_h:\n", specific_h)
+    general_h = [
+        ['?' for _ in range(len(specific_h))]
+        for _ in range(len(specific_h))
+    ]
+    print("Initial General_h:\n", general_h)
+
+    for i, h in enumerate(concepts):
+        if target[i] == "yes":
+            print("\n if instance is Positive ")
+            for x in range(len(specific_h)):
+                if h[x] != specific_h[x]:
+                    specific_h[x] = '?'
+                    general_h[x][x] = '?'
+
+        if target[i] == "no":
+            print("\nif instance is Negative")
+
+            for x in range(len(specific_h)):
+                if h[x] != specific_h[x]:
+                    general_h[x][x] = specific_h[x]
+                else:
+                    general_h[x][x] = '?'
+
+        print(" Step{}" .format(i+1))
+        print("Specific_h:", specific_h)
+        print("General_h:", general_h)
+        print("\n)
+    indices = [i for i, val in enumerate(general_h) if val == ['?', '?', '?', '?', '?', '?']]
+    for i in indices:
+      general_h.remove(['?', '?', '?', '?', '?', '?'])
+     return specific_h, 
+
+s_final, g_final = learn(concepts, target)
+print("Final Specific_h:", s_final, sep="\n")
+print("Final General_h:", g_final, sep="\n")
