@@ -1,0 +1,25 @@
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+data=pd.read_csv(r"D:\iris.csv")
+print(data.shape)
+data.head()
+data.drop('id',axis=1)
+X=data.iloc[:,:-1]
+y=data.iloc[:,-1]
+print("The shape of X is %s and shape of y is %s"%(X.shape,y.shape))
+from sklearn.ensemble import AdaBoostClassifier
+total_classes=y.nunique()
+print(f'Number of unique species: {total_classes}')
+distribution=y.value_counts()
+print(distribution)
+X_train, X_val, y_train, y_val=train_test_split(X,y,test_size=0.23,random_state=42)
+adb=AdaBoostClassifier()
+adb_model=adb.fit(X_train, y_train)
+print("The accuracy of model on validation is: ",adb_model.score(X_val,y_val))
+from sklearn.metrics import accuracy_score
+y_pred=adb_model.predict(X_val)
+accuracy=accuracy_score(y_val,y_pred)
+print(f'The accuracy of the prediction on iris flower is: {accuracy}')
+df = pd.DataFrame({'Actual': y_val, 'Predicted': y_pred})
+print(df)
